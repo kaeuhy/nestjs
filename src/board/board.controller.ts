@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param } from '@nestjs/common';
-import { BoardService } from './board.service';
+import { Board, BoardService } from './board.service';
 
 @Controller('board')
 export class BoardController {
@@ -8,12 +8,12 @@ export class BoardController {
   constructor(private readonly boardService: BoardService) {}
 
   @Get()
-  finAll() {
+  finAll(): Board[] {
     return this.boardService.findAll();
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
+  findOne(@Param("id") id: string): Board {
     return this.boardService.findOne(id);
   }
 }
