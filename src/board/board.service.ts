@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 export interface Board {
-  id: string;
+  id: number;
   title: string;
   content: string;
 }
@@ -10,17 +10,17 @@ export interface Board {
 export class BoardService {
   private boards: Board[] = [
     {
-      id: '1',
+      id: 1,
       title: '첫 번째 게시글 - 제목',
       content: '첫 번째 게시글 - 본문',
     },
     {
-      id: '2',
+      id: 2,
       title: '두 번째 게시글 - 제목',
       content: '두 번째 게시글 - 본문',
     },
     {
-      id: '3',
+      id: 3,
       title: '세 번째 게시글 - 제목',
       content: '세 번째 게시글 - 본문',
     },
@@ -31,7 +31,7 @@ export class BoardService {
     return this.boards;
   }
 
-  findOne(id: string): Board {
+  findOne(id: number): Board {
     // return `게시물 조회 (ID: ${id})`;
     const board = this.boards.find((item) => item.id == id);
 
@@ -42,5 +42,21 @@ export class BoardService {
     }
 
     return board
+  }
+
+  create(payload: any) {
+    const newBoard = {
+      id: this.generateId(),
+      ...payload,
+    }
+
+    this.boards.push(newBoard)
+    return newBoard;
+  }
+
+  generateId() {
+    return this.boards.length == 0
+      ? 1
+      : Math.max(...this.boards.map((board) => board.id)) + 1;
   }
 }
