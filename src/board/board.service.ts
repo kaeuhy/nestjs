@@ -59,4 +59,32 @@ export class BoardService {
       ? 1
       : Math.max(...this.boards.map((board) => board.id)) + 1;
   }
+
+  update(id: number, payload: any) {
+    const boardIndex = this.boards.findIndex((board) => board.id == id)
+
+    if (boardIndex == -1) {
+      throw new NotFoundException(
+        `ID ${id}에 해당하는 게시글을 찾을 수 없습니다.`,
+      );
+    }
+
+    this.boards[boardIndex] = { ...this.boards[boardIndex], ...payload }
+
+    return this.boards[boardIndex]
+  }
+
+  delete(id: number) {
+    const boardIndex = this.boards.findIndex((board) => board.id == id)
+
+    if (boardIndex == -1) {
+      throw new NotFoundException(
+        `ID ${id}에 해당하는 게시글을 찾을 수 없습니다.`,
+      );
+    }
+
+    this.boards.splice(boardIndex, 1);
+
+    return this.boards;
+  }
 }
