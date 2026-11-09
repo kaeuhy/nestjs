@@ -1,5 +1,18 @@
-import { Body, Controller, Get, Param, Delete, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Delete,
+  Post,
+  Put,
+  UsePipes,
+  ValidationPipe,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { Board, BoardService } from './board.service';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('board')
 export class BoardController {
@@ -18,17 +31,21 @@ export class BoardController {
   }
 
   @Post()
-  create(@Body() data: any) {
+  // 해당 핸들러에 파이프 적용
+  @UsePipes(new ValidationPipe())
+  create(@Body() data: CreatePostDto) {
+    // 이곳에 도달한 data는 유효성 검사를 통과한 상태임
     return this.boardService.create(data);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() data: any): Board{
-    return this.boardService.update(Number(id), data)
+  @UsePipes(new ValidationPipe())
+  update(@Param('id', ParseIntPipe) id: number, @Body() data: UpdatePostDto): Board{
+    return this.boardService.update(id, data)
   }
 
   @Delete(":id")
-  delete(@Param('id') id: string): Board[] {
-    return this.boardService.delete(Number(id))
+  delete(@Param('id', ParseIntPipe) id: number): Board[] {
+    return this.boardService.delete(id)
   }
 }
