@@ -30,18 +30,18 @@ export class TaskController {
 
   @Post()
   @UsePipes(new ValidationPipe())
-  create(@Body() body: CreateTaskDto) {
-    this.taskService.createTask(body);
+  async create(@Body() body: CreateTaskDto) {
+    return await this.taskService.createTask(body);
   }
 
   @Patch(':id')
   @UsePipes(new ValidationPipe())
-  update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateTaskDto) {
-    this.taskService.updateTask(id, body);
+  async update(@Param('id', ParseIntPipe) id: number, @Body() body: UpdateTaskDto) {
+    return await this.taskService.updateTask(id, body);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    this.taskService.removeTask(id);
+  async remove(@Param('id', ParseIntPipe) id: number) {
+    return await this.taskService.removeTask(id);
   }
 }

@@ -45,5 +45,17 @@ export class TaskService {
 
   updateTask(id: number, payload: UpdateTaskDto) {}
 
-  removeTask(id: number) {}
+  async removeTask(id: number) {
+    const task = await this.taskRepository.findOne({ where: { id }});
+
+    if (!task) {
+      throw new NotFoundException(`ID의 값이 ${id}인 테스크를 찾을 수가 없습니다.`,);
+    }
+    await this.taskRepository.delete(id);
+
+    return {
+      message: "테스크 삭제를 완료했습니다.",
+      statusCode: HttpStatus.NO_CONTENT
+    }
+  }
 }
