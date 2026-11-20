@@ -43,7 +43,17 @@ export class TaskService {
     }
   }
 
-  updateTask(id: number, payload: UpdateTaskDto) {}
+  async updateTask(id: number, payload: UpdateTaskDto): Promise<TaskEntity> {
+    const task = await this.getTask(id);
+
+    // 데이터 병합
+    // Object.assign(대상객체, 소스객체)을 사용하여 기존 엔티티에 수정된 내용만 덮어씌움
+    Object.assign(task, payload);
+
+    // DB 저장
+    // save() 메서드는 엔티티에 primary key(id)가 포함되어 있으면 새로운 행을 생성하지 않고, 기존 행을 업데이트함
+    return await this.taskRepository.save(task);
+  }
 
   async removeTask(id: number) {
     const task = await this.taskRepository.findOne({ where: { id }});
